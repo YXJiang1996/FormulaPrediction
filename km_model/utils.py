@@ -25,14 +25,14 @@ def reflectance_to_spectral_color(reflectance, observer='10', illuminant='d65', 
 
 def reflectance2lab(reflectance):
     spec = reflectance_to_spectral_color(reflectance)
-    lab=convert_color(spec,LabColor)
+    lab = convert_color(spec, LabColor)
     return lab
 
 
 # 计算CIE1976色差
 def cie1976_color_diff(reflectance1, reflectance2):
-    lab1=reflectance2lab(reflectance1)
-    lab2=reflectance2lab(reflectance2)
+    lab1 = reflectance2lab(reflectance1)
+    lab2 = reflectance2lab(reflectance2)
     color_diff = delta_e_cie1976(lab1, lab2)
     return color_diff
 

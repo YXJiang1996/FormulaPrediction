@@ -16,7 +16,7 @@ def generate(total_data_size, prior_bound=[0, 1.5], seed=0, model='km'):
     chosen_color_num = info.chosen_color_num
     base_concentration = info.base_concentration
     base_reflectance = info.base_reflectance
-    reflectance_dim=info.reflectance_dim
+    reflectance_dim = info.reflectance_dim
 
     # 在0-1的均匀分布中随机采样，生成total_data_size条数据，每条数据包含color_num种色浆的浓度
     # 放缩到prior_bound范围下
@@ -35,11 +35,13 @@ def generate(total_data_size, prior_bound=[0, 1.5], seed=0, model='km'):
     # 使用km模型生成分光反射率
     if model == 'km':
         # 原本为color_num*1，重复reflectance_dim次，再转变为color_num*reflectance_dim
-        base_concentration_array=np.repeat(base_concentration.reshape(color_num,1),reflectance_dim).reshape(color_num,reflectance_dim)
+        base_concentration_array = np.repeat(base_concentration.reshape(color_num, 1), reflectance_dim).reshape(
+            color_num, reflectance_dim)
         # 基底的K/S值，论文公式4-6a
         fsb = (np.ones_like(background) - background) ** 2 / (background * 2)
         # 各种色浆的单位K/S值，论文公式4-6b
-        fst = ((np.ones_like(base_reflectance) - base_reflectance) ** 2 / (base_reflectance * 2) - fsb) / base_concentration_array
+        fst = ((np.ones_like(base_reflectance) - base_reflectance) ** 2 / (
+                    base_reflectance * 2) - fsb) / base_concentration_array
         # ydim*N的0
         fss = np.zeros(total_data_size * reflectance_dim).reshape(reflectance_dim, total_data_size)
         # 涂料的K/S值,论文公式4-6c
@@ -55,16 +57,18 @@ def generate(total_data_size, prior_bound=[0, 1.5], seed=0, model='km'):
         print('Model has of been implemented')
         exit(1)
 
-    #对数据进行打乱
+    # 对数据进行打乱
     shuffling = np.random.permutation(total_data_size)
     concentrations = torch.tensor(concentrations[shuffling], dtype=torch.float)
     reflectance = torch.tensor(reflectance[shuffling], dtype=torch.float)
 
-    return concentrations,reflectance
+    return concentrations, reflectance
+
 
 def main():
-    total_data_size=2**20*20
-    concentrations,reflectance=generate(total_data_size=total_data_size)
-    np.savez('dataset/3in21',concentrations=concentrations,reflectance=reflectance)
+    total_data_size = 2 ** 20 * 20
+    concentrations, reflectance = generate(total_data_size=total_data_size)
+    np.savez('dataset/3in21', concentrations=concentrations, reflectance=reflectance)
+
 
 main()
