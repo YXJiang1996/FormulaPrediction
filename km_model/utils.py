@@ -1,8 +1,6 @@
-from colormath.color_objects import SpectralColor
-from colormath.color_objects import LabColor
+from colormath.color_objects import SpectralColor,LabColor
 from colormath.color_conversions import convert_color
-from colormath.color_diff import delta_e_cie1976
-from colormath.color_diff import delta_e_cie2000
+from colormath.color_diff import delta_e_cie1976,delta_e_cie2000
 
 
 # 将400-700范围内的reflectance转化为SpectralColor对象
