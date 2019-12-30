@@ -1,4 +1,5 @@
 import torch
+import torch.utils.data
 import numpy as np
 import km_model.info as info
 
@@ -169,7 +170,7 @@ def main():
     test_split = 3 * 3  # 用于测试的数据个数
 
     # 获取模型结构
-    inn, optimizer, scheduler, loss_backward, loss_latent, loss_fit = model(dim_x=dim_x, dim_y=dim_y, dim_z=dim_z,
+    inn, optimizer, scheduler, loss_backward, loss_latent, loss_fit = model(dim_x, dim_y, dim_z, dim_total,
                                                                             lr=lr, l2_reg=l2_reg, meta_epoch=meta_epoch,
                                                                             gamma=gamma)
     # 读取数据集
