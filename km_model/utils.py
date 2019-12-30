@@ -1,6 +1,9 @@
-from colormath.color_objects import SpectralColor,LabColor
+import torch
+from colormath.color_objects import SpectralColor, LabColor
 from colormath.color_conversions import convert_color
-from colormath.color_diff import delta_e_cie1976,delta_e_cie2000
+from colormath.color_diff import delta_e_cie1976, delta_e_cie2000
+
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 
 # 将400-700范围内的reflectance转化为SpectralColor对象
@@ -41,3 +44,31 @@ def ciede2000_color_diff(reflectance1, reflectance2):
     lab2 = reflectance2lab(reflectance2)
     color_diff = delta_e_cie2000(lab1, lab2)
     return color_diff
+
+
+def MMD_multiscale(x, y):
+    xx, yy, zz = torch.mm(x, x.t()), torch.mm(y, y.t()), torch.mm(x, y.t())
+
+    rx = (xx.diag().unsqueeze(0).expand_as(xx))
+    ry = (yy.diag().unsqueeze(0).expand_as(yy))
+
+    dxx = rx.t() + rx - 2. * xx
+    dyy = ry.t() + ry - 2. * yy
+    dxy = rx.t() + ry - 2. * zz
+
+    XX, YY, XY = (torch.zeros(xx.shape).to(device),
+                  torch.zeros(xx.shape).to(device),
+                  torch.zeros(xx.shape).to(device))
+
+    for a in [0.2, 0.5, 0.9, 1.3]:
+        XX += a ** 2 * (a ** 2 + dxx) ** -1
+        YY += a ** 2 * (a ** 2 + dyy) ** -1
+        XY += a ** 2 * (a ** 2 + dxy) ** -1
+
+    return torch.mean(XX + YY - 2. * XY)
+
+def fit(input, target):
+    return torch.mean((input - target) ** 2)
+
+def non_nagative_attachment(base, lamb, x):
+    return 1. / torch.clamp(torch.pow(base, lamb * x[x < 0]), min=0.001)

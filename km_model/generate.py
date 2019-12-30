@@ -54,7 +54,7 @@ def generate(total_data_size, prior_bound=[0, 1.5], seed=0, model='km'):
         # 转置
         reflectance = reflectance.transpose()
     else:
-        print('Model has of been implemented')
+        print('Model has not been implemented')
         exit(1)
 
     # 对数据进行打乱
