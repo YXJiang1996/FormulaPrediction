@@ -69,6 +69,6 @@ def main():
     total_data_size = 2 ** 20 * 20
     concentrations, reflectance = generate(total_data_size=total_data_size)
     np.savez('dataset/3in21', concentrations=concentrations, reflectance=reflectance)
-
+    np.savetxt('dataTxt',concentrations)
 
 main()
