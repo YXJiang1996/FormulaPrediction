@@ -210,8 +210,8 @@ def main():
             loss_for_list.append(loss_for.item())
             loss_rev_list.append(loss_rev.item())
 
-        torch.save(inn, 'model_dir/model_01')
-        loss_txt=open('km_model/loss.txt','w+')
+        torch.save(inn, 'models/model_01')
+        loss_txt=open('loss.txt','w+')
         for i in range(n_epochs):
             # 打印损失
             print('epoch:', i, ' loss_for:', loss_for_list[0][i], ' loss_rev:', loss_rev[1][i],

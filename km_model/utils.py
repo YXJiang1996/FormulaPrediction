@@ -1,4 +1,6 @@
 import torch
+import numpy as np
+import km_model.info as info
 from colormath.color_objects import SpectralColor, LabColor
 from colormath.color_conversions import convert_color
 from colormath.color_diff import delta_e_cie1976, delta_e_cie2000
@@ -67,8 +69,31 @@ def MMD_multiscale(x, y):
 
     return torch.mean(XX + YY - 2. * XY)
 
+
 def fit(input, target):
     return torch.mean((input - target) ** 2)
 
+
 def non_nagative_attachment(base, lamb, x):
     return 1. / torch.clamp(torch.pow(base, lamb * x[x < 0]), min=0.001)
+
+
+# 使用km模型计算配方的分光反射率
+def conc2ref_km(concentrations, background=info.white_solvent_reflectance,
+                base_conc=info.base_concentration,
+                base_color_num=info.base_color_num, base_ref=info.base_reflectance,
+                ref_dim=info.reflectance_dim):
+    init_conc_array = np.repeat(base_conc.reshape(base_color_num, 1), ref_dim).reshape(base_color_num, ref_dim)
+    reflectance = np.zeros(ref_dim * concentrations.shape[0]).reshape(ref_dim, concentrations.shape[0])
+
+    fsb = (np.ones_like(background) - background) ** 2 / (background * 2)
+    fst = ((np.ones_like(base_ref) - base_ref) ** 2 / (base_ref * 2) - fsb) / init_conc_array
+    fss = np.zeros(31 * concentrations.shape[0]).reshape(31, concentrations.shape[0])
+    for i in range(info.reflectance_dim):
+        for j in range(info.base_color_num):
+            fss[i, :] += concentrations[:, j] * fst[j, i]
+        fss[i, :] += np.ones(concentrations.shape[0]) * fsb[i]
+
+    reflectance = fss - ((fss + 1) ** 2 - 1) ** 0.5 + 1
+    reflectance = reflectance.transpose()
+    return reflectance

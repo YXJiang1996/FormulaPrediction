@@ -1,4 +1,2 @@
-a=[1,2,3]
-b=[4,5,6]
-c=[a,b]
-print(c[1][2])
+loss_txt=open('km_model/loss.txt','w+')
+print('a',file=loss_txt)
