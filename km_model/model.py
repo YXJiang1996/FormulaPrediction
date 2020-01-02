@@ -7,7 +7,7 @@ from torch import nn
 from time import time
 from tqdm import tqdm
 from FrEIA.framework import InputNode, OutputNode, Node, ReversibleGraphNet
-from FrEIA.modules import GLOWCouplingBlock, PermuteRandom, F_fully_connected
+from FrEIA.modules import  PermuteRandom, F_fully_connected,GLOWCouplingBlock
 from km_model.utils import MMD_multiscale, fit, non_nagative_attachment
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -26,6 +26,9 @@ def model(dim_x, dim_y, dim_z, dim_total, lr, l2_reg, meta_epoch, gamma, hidden_
                           {'subnet_constructor': F_fully_connected, 'clamp': 2.0, },
                           name='coupling_{k}'))
         nodes.append(Node(nodes[-1], PermuteRandom, {'seed': 1}, name='permute_{k}'))
+    nodes.append(Node(nodes[-1], GLOWCouplingBlock,
+                      {'subnet_constructor': F_fully_connected, 'clamp': 2.0, },
+                      name='coupling_{k}'))
     # 定义输出层节点
     nodes.append(OutputNode(nodes[-1], name='output'))
 
@@ -145,7 +148,7 @@ def train(model, train_loader, n_its_per_epoch, zeros_noise_scale, batch_size, n
 # 训练模型
 def main():
     # 训练轮数
-    n_epochs = 3000
+    n_epochs = 3
     # x,y,z的维度
     dim_x = info.base_color_num
     dim_y = info.reflectance_dim
@@ -214,9 +217,9 @@ def main():
         loss_txt=open('loss.txt','w+')
         for i in range(n_epochs):
             # 打印损失
-            print('epoch:', i, ' loss_for:', loss_for_list[0][i], ' loss_rev:', loss_rev[1][i],
+            print('epoch:', i, ' loss_for:', loss_for_list[i], ' loss_rev:', loss_rev_list[i],
                   file=loss_txt)
-        data.close()
+        loss_txt.close()
     except KeyboardInterrupt:
         pass
     finally:
