@@ -30,9 +30,9 @@ def test(concentrations, reflectance, model):
 
 def main():
     # 加载模型
-    inn = torch.load('models/model_01')
+    inn = torch.load('km_model/models/model_01')
     # 读取数据集
-    data = np.load('dataset/3in21.npz')
+    data = np.load('km_model/dataset/3in21.npz')
     concentrations = torch.from_numpy(data['concentrations']).float()
     reflectance = torch.from_numpy(data['reflectance']).float()
     # 加载数据
@@ -40,6 +40,8 @@ def main():
     test_conc = concentrations[:testsplit]
     test_ref = reflectance[:testsplit]
     # 进行测试
-    test(test_conc,test_ref,inn)
-
+    for i in range(testsplit):
+        # test(test_conc[i],test_ref[i],inn)
+        print(test_conc[i])
+        print(test_ref[i])
 main()
