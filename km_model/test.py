@@ -27,7 +27,7 @@ def test(concentrations, reflectance, test_samp, model):
     print(concentrations)
     for n in range(3):
         print('predict_formula_', n)
-        print(formula_ref[top3[n][1], :])
+        print(predict_formula[top3[n][1], :])
         print("color diff: %.2f \n" % top3[n][0])
     print("\n\n")
 

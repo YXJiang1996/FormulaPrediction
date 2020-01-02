@@ -149,6 +149,7 @@ def train(model, train_loader, n_its_per_epoch, zeros_noise_scale, batch_size, n
 def main():
     # 训练轮数
     n_epochs = 1000
+
     # x,y,z的维度
     dim_x = info.base_color_num
     dim_y = info.reflectance_dim
