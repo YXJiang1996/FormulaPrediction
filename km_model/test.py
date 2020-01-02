@@ -6,7 +6,7 @@ from km_model.utils import conc2ref_km, ciede2000_color_diff
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 
-def test(concentrations, reflectance,test_samp, model):
+def test(concentrations, reflectance, test_samp, model):
     # 使用inn预测配方
     predict_formula = model(test_samp, rev=True)[:, :base_color_num]
     predict_formula = predict_formula.cpu().data.numpy()
@@ -60,8 +60,8 @@ def main():
                                test_samp], dim=1)
         test_samp = test_samp.to(device)
         # 测试
-        print('test sample:',i)
-        test(test_conc[i],test_ref[i],test_samp, inn)
+        print('test sample:', i)
+        test(test_conc[i], test_ref[i], test_samp, inn)
 
 
 main()

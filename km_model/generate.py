@@ -41,7 +41,7 @@ def generate(total_data_size, prior_bound=[0, 1.5], seed=0, model='km'):
         fsb = (np.ones_like(background) - background) ** 2 / (background * 2)
         # 各种色浆的单位K/S值，论文公式4-6b
         fst = ((np.ones_like(base_reflectance) - base_reflectance) ** 2 / (
-                    base_reflectance * 2) - fsb) / base_concentration_array
+                base_reflectance * 2) - fsb) / base_concentration_array
         # ydim*N的0
         fss = np.zeros(total_data_size * reflectance_dim).reshape(reflectance_dim, total_data_size)
         # 涂料的K/S值,论文公式4-6c
@@ -69,6 +69,7 @@ def main():
     total_data_size = 2 ** 20 * 20
     concentrations, reflectance = generate(total_data_size=total_data_size)
     np.savez('dataset/3in21', concentrations=concentrations, reflectance=reflectance)
-    np.savetxt('dataTxt',concentrations)
+    np.savetxt('dataTxt', concentrations)
+
 
 main()
