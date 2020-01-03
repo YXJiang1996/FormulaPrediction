@@ -6,7 +6,7 @@ import torch.nn.functional as F
 
 class IRevNetDownsampling(nn.Module):
     '''The invertible spatial downsampling used in i-RevNet, adapted from
-    https://github.com/jhjacobsen/pytorch-i-revnet/blob/master/models/model_utils.py'''
+    https://github.com/jhjacobsen/pytorch-i-revnet/blob/master/model_dir/model_utils.py'''
 
     def __init__(self, dims_in):
         super().__init__()

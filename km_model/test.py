@@ -34,9 +34,9 @@ def test(concentrations, reflectance, test_samp, model):
 
 def main():
     # 加载模型
-    inn = torch.load('km_model/models/model_01')
+    inn = torch.load('km_model/model_dir/model_01')
     # 读取数据集
-    data = np.load('km_model/dataset/3in21.npz')
+    data = np.load('km_model/data_dir/3in21.npz')
     concentrations = torch.from_numpy(data['concentrations']).float()
     reflectance = torch.from_numpy(data['reflectance']).float()
     # 加载数据

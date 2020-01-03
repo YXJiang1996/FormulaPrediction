@@ -8,7 +8,7 @@ from time import time
 from tqdm import tqdm
 from FrEIA.framework import InputNode, OutputNode, Node, ReversibleGraphNet
 from FrEIA.modules import PermuteRandom, F_fully_connected, GLOWCouplingBlock
-from km_model.utils import MMD_multiscale, fit, non_nagative_attachment
+from km_model.utils import MMD_multiscale, fit, non_nagative_attachment,plot_losses
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -178,7 +178,7 @@ def main():
                                                                             lr=lr, l2_reg=l2_reg, meta_epoch=meta_epoch,
                                                                             gamma=gamma)
     # 读取数据集
-    data = np.load('dataset/3in21.npz')
+    data = np.load('data_dir/3in21.npz')
     concentrations = torch.from_numpy(data['concentrations']).float()
     reflectance = torch.from_numpy(data['reflectance']).float()
     # 加载数据
@@ -212,9 +212,13 @@ def main():
             # 添加正向和逆向的损失到列表中
             loss_for_list.append(loss_for.item())
             loss_rev_list.append(loss_rev.item())
-
-        torch.save(inn, 'models/model_01')
-        loss_txt = open('loss.txt', 'w+')
+        # 保存模型
+        torch.save(inn, 'model_dir/model_01')
+        # 损失函数画图
+        losses=[loss_for_list,loss_rev_list]
+        plot_losses(losses,'loss_01')
+        # 保存损失函数到文件
+        loss_txt = open('loss_01.txt', 'w+')
         for i in range(n_epochs):
             # 打印损失
             print('epoch:', i, ' loss_for:', loss_for_list[i], ' loss_rev:', loss_rev_list[i],

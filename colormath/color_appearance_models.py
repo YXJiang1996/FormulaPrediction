@@ -39,7 +39,7 @@ class Nayatani95(object):
     """
     **References**
 
-    * Fairchild, M. D. (2013). *Color appearance models*, 3rd Ed. John Wiley & Sons.
+    * Fairchild, M. D. (2013). *Color appearance model_dir*, 3rd Ed. John Wiley & Sons.
     * Nayatani, Y., Sobagaki, H., & Yano, K. H. T. (1995). Lightness dependency of chroma scales of a nonlinear
       color-appearance model and its latest formulation. *Color Research & Application*, 20(3), 156-167.
 
@@ -231,7 +231,7 @@ class Hunt(object):
     """
     **References**
 
-    * Fairchild, M. D. (2013). *Color appearance models*, 3rd Ed. John Wiley & Sons.
+    * Fairchild, M. D. (2013). *Color appearance model_dir*, 3rd Ed. John Wiley & Sons.
     * Hunt, R. W. G. (2005). *The reproduction of colour*. 5th Ed., John Wiley & Sons.
 
     """
@@ -631,7 +631,7 @@ class RLAB(object):
     **References**
 
     * Fairchild, M. D. (1996). Refinement of the RLAB color space. *Color Research & Application*, 21(5), 338-346.
-    * Fairchild, M. D. (2013). *Color appearance models*, 3rd Ed. John Wiley & Sons.
+    * Fairchild, M. D. (2013). *Color appearance model_dir*, 3rd Ed. John Wiley & Sons.
 
     """
 
@@ -758,7 +758,7 @@ class ATD95(object):
     **References**
 
 
-    * Fairchild, M. D. (2013). *Color appearance models*, 3rd Ed. John Wiley & Sons.
+    * Fairchild, M. D. (2013). *Color appearance model_dir*, 3rd Ed. John Wiley & Sons.
     * Guth, S. L. (1995, April). Further applications of the ATD model for color vision. In *IS&T/SPIE's Symposium
       on Electronic Imaging: Science & Technology* (pp. 12-26). International Society for Optics and Photonics.
 
@@ -856,7 +856,7 @@ class LLAB(object):
     """
     **References**
 
-    * Fairchild, M. D. (2013). *Color appearance models*, 3rd Ed. John Wiley & Sons.
+    * Fairchild, M. D. (2013). *Color appearance model_dir*, 3rd Ed. John Wiley & Sons.
     * Luo, M. R., & Morovic, J. (1996, September). Two unsolved issues in colour management-colour appearance and
       gamut mapping. In *5th International Conference on High Technology* (pp. 136-147).
     * Luo, M. R., Lo, M. C., & Kuo, W. G. (1996). The LLAB (l: c) colour model.
@@ -1000,7 +1000,7 @@ class CIECAM02(object):
 
     * CIE TC 8-01 (2004). A Color appearance model for color management systems.
       Publication 159. Vienna: CIE Central Bureau. ISBN 3-901906-29-0.
-    * Fairchild, M. D. (2013). *Color appearance models*, 3rd Ed. John Wiley & Sons.
+    * Fairchild, M. D. (2013). *Color appearance model_dir*, 3rd Ed. John Wiley & Sons.
     """
 
     @property

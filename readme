@@ -1,8 +1,33 @@
 1.潜在空间的维度，为什么是13
 2.损失的权重 300,300,400
+3.使用nice,rnvp,glow
+4.使用dropout,不使用dropout
+5.输入输出，padding,维度扩大
+6.损失的权重
 
 
-使用nice,rnvp,glow
-使用dropout,不使用dropout
-输入输出，padding,维度扩大
-损失的权重
+数据集说明：
+data_01.npz：21种色浆，选择3种生成配方，浓度0-1之间，使用km模型
+
+模型说明：
+model_01:
+    input+8*(GLOWCouplingBlock+PermuteRandom)+GLOWCouplingBlock+output
+    n_epoch:3000
+    training_set：data_01
+model_02:
+    input+8*(GLOWCouplingBlock+PermuteRandom)+output
+    n_epoch:1000
+    training_set：data_01
+model_03:
+    input+8*(RNVPCouplingBlock+PermuteRandom)+output
+    n_epoch:1000
+    training_set：data_01
+model_04:
+
+测试结果说明：
+compare_01:
+    model:model_01
+    test_set:data_01.npz
+    采样：256
+    结论：仅按色差大小排序进行配方选择时，同一个模型多次进行配方预测，最后选择的配方并不相同，结果也可能相差较大
+    问题：在神经网络输出一系列的配方后，如何进行最后预测配方的选择

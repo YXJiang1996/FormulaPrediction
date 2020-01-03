@@ -2,7 +2,7 @@
 """
 This module contains the formulas for comparing Lab values with matrices
 and vectors. The benefit of using NumPy's matrix capabilities is speed. These
-calls can be used to efficiently compare large volumes of Lab colors.
+calls can be used to efficiently compare_01 large volumes of Lab colors.
 """
 
 import numpy

@@ -837,7 +837,7 @@ class IPTColor(ColorBase):
     Represents an IPT color.
 
     Reference:
-    Fairchild, M. D. (2013). Color appearance models, 3rd Ed. (pp. 271-272). John Wiley & Sons.
+    Fairchild, M. D. (2013). Color appearance model_dir, 3rd Ed. (pp. 271-272). John Wiley & Sons.
     """
 
     VALUES = ['ipt_i', 'ipt_p', 'ipt_t']

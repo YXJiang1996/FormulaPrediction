@@ -872,7 +872,7 @@ def XYZ_to_IPT(cobj, *args, **kwargs):
     NOTE: XYZ values need to be adapted to 2 degree D65
 
     Reference:
-    Fairchild, M. D. (2013). Color appearance models, 3rd Ed. (pp. 271-272). John Wiley & Sons.
+    Fairchild, M. D. (2013). Color appearance model_dir, 3rd Ed. (pp. 271-272). John Wiley & Sons.
     """
     if cobj.illuminant != 'd65' or cobj.observer != '2':
         raise ValueError('XYZColor for XYZ->IPT conversion needs to be D65 adapted.')
