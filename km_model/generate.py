@@ -7,7 +7,7 @@ from itertools import combinations
 # 用于生成配方，即色浆的浓度和对应的分光反射率
 # total_data_size：总数据集大小
 # seed: 随机数种子
-def generate(total_data_size, prior_bound=[0, 1.5], seed=0, model='km'):
+def generate(total_data_size, prior_bound=[0, 1], seed=0, model='km'):
     np.random.seed(seed)
 
     # 从info中获取相关信息
@@ -67,9 +67,9 @@ def generate(total_data_size, prior_bound=[0, 1.5], seed=0, model='km'):
 
 def main():
     total_data_size = 2 ** 20 * 20
-    concentrations, reflectance = generate(total_data_size=total_data_size)
-    np.savez('data_dir/3in21', concentrations=concentrations, reflectance=reflectance)
-    np.savetxt('dataTxt', concentrations)
+    concentrations, reflectance = generate(total_data_size=total_data_size,prior_bound=[0,1])
+    np.savez('dataset/data_02', concentrations=concentrations, reflectance=reflectance)
+    # np.savetxt('dataTxt', concentrations)
 
 
 main()

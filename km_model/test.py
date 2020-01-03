@@ -34,9 +34,9 @@ def test(concentrations, reflectance, test_samp, model):
 
 def main():
     # 加载模型
-    inn = torch.load('km_model/model_dir/model_01')
+    inn = torch.load('km_model/models/model_03')
     # 读取数据集
-    data = np.load('km_model/data_dir/3in21.npz')
+    data = np.load('km_model/dataset/data_02.npz')
     concentrations = torch.from_numpy(data['concentrations']).float()
     reflectance = torch.from_numpy(data['reflectance']).float()
     # 加载数据
@@ -44,7 +44,7 @@ def main():
     test_conc = concentrations[:testsplit]
     test_ref = reflectance[:testsplit]
     # 选取的样本数
-    N_sample = 256
+    N_sample = 1024
     y_noise_scale = 3e-2
     dim_x = base_color_num
     dim_y = reflectance_dim
