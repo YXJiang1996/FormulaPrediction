@@ -6,13 +6,20 @@ from km_model.utils import conc2ref_km, ciede2000_color_diff
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 
-def test(concentrations, reflectance, test_samp, model):
+# 预测配方
+def predict(concentrations, reflectance, test_samp, model):
     # 使用inn预测配方
     predict_formula = model(test_samp, rev=True)[:, :base_color_num]
     predict_formula = predict_formula.cpu().data.numpy()
     # 假设涂料浓度小于一定值时，就不需要这种涂料
     predict_formula = np.where(predict_formula < 0.1, 0, predict_formula)
 
+    return predict_formula
+
+
+# 根据分光反射率预测出配方，对于每一个分光反射率，选择色差最小的三个配方
+# concentrations:目标真实配方，reflectance:目标分光反射率，predict_formula:预测的配方
+def test1(concentrations, reflectance, predict_formula):
     # 计算预测配方的反射率信息
     formula_ref = conc2ref_km(predict_formula)
     # 用于记录色差最小的三个配方
@@ -30,6 +37,31 @@ def test(concentrations, reflectance, test_samp, model):
         print(predict_formula[top3[n][1], :])
         print("color diff: %.2f \n" % top3[n][0])
     print("\n\n")
+
+
+# 选择满足色浆种类不超过5种，且色差最小的三个配方
+# concentrations:目标真实配方，reflectance:目标分光反射率，predict_formula:预测的配方
+def test2(concentrations, reflectance, predict_formula):
+    # 计算预测配方的反射率信息
+    formula_ref = conc2ref_km(predict_formula)
+    # 用于记录色差最小的三个配方
+    top3 = [[100, 0], [100, 0], [100, 0]]
+    for n in range(formula_ref.shape[0]):
+        diff = ciede2000_color_diff(reflectance, formula_ref[n, :])
+        temp_formula = predict_formula[n, :].copy
+        temp_formula[temp_formula != 0] = 1
+        # 只选择使用的色浆种类小于等于5种的配方
+        if (sum(temp_formula) <= 5 and diff < top3[2][0]):
+            top3[2][0] = diff
+            top3[2][1] = n
+            top3.sort()
+        print('real_formula:')
+        print(concentrations)
+        for n in range(3):
+            print('predict_formula_', n)
+            print(predict_formula[top3[n][1], :])
+            print("color diff: %.2f \n" % top3[n][0])
+        print("\n\n")
 
 
 def main():
@@ -61,7 +93,9 @@ def main():
         test_samp = test_samp.to(device)
         # 测试
         print('test sample:', i)
-        test(test_conc[i], test_ref[i], test_samp, inn)
+        predict_formula = predict(test_conc[i], test_ref[i], test_samp, inn)
+        # test1(test_conc[i],test_ref[i],predict_formula)
+        test2(test_conc[i], test_ref[i], predict_formula)
 
 
 main()
