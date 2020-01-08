@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+import sys
+sys.path.append("..")
 import numpy as np
 import torch
 from time import time
@@ -68,9 +70,9 @@ def test2(concentrations, reflectance, predict_formula):
 
 def main():
     # 加载模型
-    inn = torch.load('km_model/model_dir/model_01')
+    inn = torch.load('model_dir/model_01')
     # 读取数据集
-    data = np.load('km_model/data_dir/data_01.npz')
+    data = np.load('data_dir/data_01.npz')
     concentrations = torch.from_numpy(data['concentrations']).float()
     reflectance = torch.from_numpy(data['reflectance']).float()
     # 加载数据
@@ -78,7 +80,7 @@ def main():
     test_conc = concentrations[:testsplit]
     test_ref = reflectance[:testsplit]
     # 选取的样本数
-    N_sample = 1024
+    N_sample = 20000
     y_noise_scale = 3e-2
     dim_x = base_color_num
     dim_y = reflectance_dim
@@ -97,22 +99,23 @@ def main():
         print('test sample:', i)
         predict_formula = predict(test_conc[i], test_ref[i], test_samp, inn)
         # test1(test_conc[i],test_ref[i],predict_formula)
-        test2(test_conc[i], test_ref[i], predict_formula)
+        test1(test_conc[i], test_ref[i], predict_formula)
 
 
 def plot():
     # 加载模型
-    inn = torch.load('km_model/model_dir/model_01')
+    inn = torch.load('model_dir/model_01')
     # 读取数据集
-    data = np.load('km_model/data_dir/data_01.npz')
+    data = np.load('data_dir/data_01.npz')
     concentrations = torch.from_numpy(data['concentrations']).float()
     reflectance = torch.from_numpy(data['reflectance']).float()
     # 加载数据
-    testsplit = 1
+    testsplit = 3
     test_conc = concentrations[:testsplit]
     test_ref = reflectance[:testsplit]
     # 选取的样本个数序列
-    sample_range = np.arange(1000, 1000001, 1000)
+    #sample_range = np.array([100,200,300,400,500,600,700,800,900,1000,2000,3000,4000,5000,6000,7000,8000,9000,10000,15000,20000])
+    sample_range=np.array([100,200])
     y_noise_scale = 3e-2
     dim_x = base_color_num
     dim_y = reflectance_dim
@@ -122,33 +125,40 @@ def plot():
     min_avg_arr = []
     # 平均预测时间
     time_avg_arr = []
-    for n in sample_range:
-        N_sample = n
-        min_arr = []
-        time_arr = []
-        for i in range(10):
-            t_start = time()
-            for i in range(testsplit):
+    for i in range(testsplit):
+        temp1 = []
+        temp2 = []
+        for n in sample_range:
+            N_sample = n
+            min_arr = []
+            time_arr = []
+            for k in range(5):
+                t_start = time()
                 test_samp = generate_test_sample(test_ref[i], N_sample, y_noise_scale, dim_x, dim_y, dim_z, dim_total)
                 predict_formula = predict(test_conc[i], test_ref[i], test_samp, inn)
-                min_color_diff = min_color_diff(test_conc[i], test_ref[i], predict_formula)
-                min_arr.append(min_color_diff)
-            time_cost = time() - t_start
-            time_arr.append(time_cost)
-        min_avg = sum(min_arr) / 10
-        time_avg = sum(time_arr) / 10
-        min_avg_arr.append(min_avg)
-        time_avg_arr.append(time_avg)
+                temp_diff = min_color_diff(test_conc[i], test_ref[i], predict_formula)
+                min_arr.append(temp_diff)
+                time_cost = time() - t_start
+                time_arr.append(time_cost)
+            min_avg = sum(min_arr) / 5
+            time_avg = sum(time_arr) / 5
+	    temp1.append(min_avg)
+	    temp2.append(time_avg)
+        min_avg_arr.append(temp1)
+        time_avg_arr.append(temp2)
     fig = plt.figure(figsize=(6, 6))
     ax1 = fig.add_subplot(211)
-    ax1.plot(sample_range, min_avg_arr)
+    ax1.plot(sample_range, min_avg_arr[0],label='sample_01')
+    ax1.plot(sample_range, min_avg_arr[1],label='sample_02')
+    ax1.plot(sample_range, min_avg_arr[2],label='sample_03')
+    ax1.legend(loc='upper right')
     ax1.set_xlabel('sample_num')
     ax1.set_ylabel('color_diff')
     ax2 = fig.add_subplot(212)
     ax2.set_xlabel('sample_num')
     ax2.set_ylabel('time_cost')
     ax2.plot(sample_range, time_avg_arr)
-    plt.savefig('fig1.png')
+    plt.savefig('fig2.png')
 
 
 # 生成测试样本
@@ -173,7 +183,8 @@ def min_color_diff(concentrations, reflectance, predict_formula):
         diff = ciede2000_color_diff(reflectance, formula_ref[n, :])
         if diff < min_diff:
             min_diff = diff
-    return diff
+    return min_diff
 
 
-main()
+#main()
+plot()
