@@ -1,6 +1,4 @@
 import matplotlib.pyplot as plt
-import sys
-sys.path.append("..")
 import numpy as np
 import torch
 from time import time
@@ -142,8 +140,8 @@ def plot():
                 time_arr.append(time_cost)
             min_avg = sum(min_arr) / 5
             time_avg = sum(time_arr) / 5
-	    temp1.append(min_avg)
-	    temp2.append(time_avg)
+        temp1.append(min_avg)
+        temp2.append(time_avg)
         min_avg_arr.append(temp1)
         time_avg_arr.append(temp2)
     fig = plt.figure(figsize=(6, 6))
