@@ -1,5 +1,7 @@
+import matplotlib.pyplot as plt
 import numpy as np
 import torch
+from time import time
 from km_model.info import base_color_num, reflectance_dim
 from km_model.utils import conc2ref_km, ciede2000_color_diff
 
@@ -96,6 +98,82 @@ def main():
         predict_formula = predict(test_conc[i], test_ref[i], test_samp, inn)
         # test1(test_conc[i],test_ref[i],predict_formula)
         test2(test_conc[i], test_ref[i], predict_formula)
+
+
+def plot():
+    # 加载模型
+    inn = torch.load('km_model/model_dir/model_01')
+    # 读取数据集
+    data = np.load('km_model/data_dir/data_01.npz')
+    concentrations = torch.from_numpy(data['concentrations']).float()
+    reflectance = torch.from_numpy(data['reflectance']).float()
+    # 加载数据
+    testsplit = 1
+    test_conc = concentrations[:testsplit]
+    test_ref = reflectance[:testsplit]
+    # 选取的样本个数序列
+    sample_range = np.arange(1000, 1000001, 1000)
+    y_noise_scale = 3e-2
+    dim_x = base_color_num
+    dim_y = reflectance_dim
+    dim_z = 13
+    dim_total = max(dim_x, dim_y + dim_z)
+    # 平均最小色差
+    min_avg_arr = []
+    # 平均预测时间
+    time_avg_arr = []
+    for n in sample_range:
+        N_sample = n
+        min_arr = []
+        time_arr = []
+        for i in range(10):
+            t_start = time()
+            for i in range(testsplit):
+                test_samp = generate_test_sample(test_ref[i], N_sample, y_noise_scale, dim_x, dim_y, dim_z, dim_total)
+                predict_formula = predict(test_conc[i], test_ref[i], test_samp, inn)
+                min_color_diff = min_color_diff(test_conc[i], test_ref[i], predict_formula)
+                min_arr.append(min_color_diff)
+            time_cost = time() - t_start
+            time_arr.append(time_cost)
+        min_avg = sum(min_arr) / 10
+        time_avg = sum(time_arr) / 10
+        min_avg_arr.append(min_avg)
+        time_avg_arr.append(time_avg)
+    fig = plt.figure(figsize=(6, 6))
+    ax1 = fig.add_subplot(211)
+    ax1.plot(sample_range, min_avg_arr)
+    ax1.set_xlabel('sample_num')
+    ax1.set_ylabel('color_diff')
+    ax2 = fig.add_subplot(212)
+    ax2.set_xlabel('sample_num')
+    ax2.set_ylabel('time_cost')
+    ax2.plot(sample_range, time_avg_arr)
+    plt.savefig('fig1.png')
+
+
+# 生成测试样本
+def generate_test_sample(test_ref, N_sample, y_noise_scale, dim_x, dim_y, dim_z, dim_total):
+    test_samp = np.tile(np.array(test_ref), N_sample).reshape(N_sample, reflectance_dim)
+    test_samp = torch.tensor(test_samp, dtype=torch.float)
+    test_samp += y_noise_scale * torch.randn(N_sample, reflectance_dim)
+    test_samp = torch.cat([torch.randn(N_sample, dim_z),  # zeros_noise_scale *
+                           torch.zeros(N_sample, dim_total - dim_y - dim_z),
+                           test_samp], dim=1)
+    test_samp = test_samp.to(device)
+    return test_samp
+
+
+# 计算预测配方的最小色差
+def min_color_diff(concentrations, reflectance, predict_formula):
+    # 计算预测配方的反射率信息
+    formula_ref = conc2ref_km(predict_formula)
+    # 用于最小色差
+    min_diff = 100
+    for n in range(formula_ref.shape[0]):
+        diff = ciede2000_color_diff(reflectance, formula_ref[n, :])
+        if diff < min_diff:
+            min_diff = diff
+    return diff
 
 
 main()
