@@ -68,9 +68,9 @@ def test2(concentrations, reflectance, predict_formula):
 
 def main():
     # 加载模型
-    inn = torch.load('km_model/models/model_03')
+    inn = torch.load('km_model/model_dir/model_01')
     # 读取数据集
-    data = np.load('km_model/dataset/data_02.npz')
+    data = np.load('km_model/data_dir/data_01.npz')
     concentrations = torch.from_numpy(data['concentrations']).float()
     reflectance = torch.from_numpy(data['reflectance']).float()
     # 加载数据
