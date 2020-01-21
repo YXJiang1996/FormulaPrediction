@@ -1,8 +1,10 @@
+import matplotlib.pyplot as plt
 import numpy as np
+import time
 
-a =np.array( [[1, 2, 0, 4, 5], [2, 3, 5, 3, 4]])
-b=a[0,:].copy()
-b[b!=0]=1
-count=sum(b)
-print(count)
-print(a[0,:].reshape(1,5))
+def main():
+    print('start program')
+    time.sleep(60)
+    print('finish sleep')
+
+main()

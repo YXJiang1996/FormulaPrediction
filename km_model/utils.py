@@ -55,6 +55,7 @@ def ciede2000_color_diff(reflectance1, reflectance2):
 
 
 # 使用km模型计算配方的分光反射率
+# 注意：这里的concentrations使用的是 color_num*sample_num 的二维数组
 def conc2ref_km(concentrations, background=info.white_solvent_reflectance,
                 base_conc=info.base_concentration,
                 base_color_num=info.base_color_num, base_ref=info.base_reflectance,
@@ -124,3 +125,49 @@ def plot_losses(losses, name):
     # 保存图片
     plt.savefig('loss_dir/%s.png' % name)
     plt.close()
+
+
+# 单x轴对应单y轴
+# 注意：此处的y_arr为一个二维的list,也就是包含多条线
+def plot_xy(x_arr, x_name, y_arr, y_legend_arr, y_name, fig_name, fig_dir):
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    for i in range(len(y_arr)):
+        ax.plot(x_arr, y_arr[i], label=y_legend_arr[i])
+    ax.set_xlabel(x_name)
+    ax.set_ylabel(y_name)
+    fig.legend(loc=1, bbox_to_anchor=(1, 1), bbox_transform=ax.transAxes)
+    plt.savefig('%s/%s.png' % (fig_dir, fig_name))
+
+
+# 单x轴对应双y轴,两个y轴在同一图中
+def plot_xyy1(x_arr, x_name, y1_arr, y1_legend_arr, y1_name, y2_arr, y2_legend_arr, y2_name, fig_name, fig_dir):
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    for i in range(len(y1_arr)):
+        ax.plot(x_arr, y1_arr[i], label=y1_legend_arr[i])
+    ax2 = ax.twinx()
+    for i in range(len(y2_arr)):
+        ax2.plot(x_arr, y2_arr[i], label=y2_legend_arr[i])
+    fig.legend(loc=1, bbox_to_anchor=(1, 1), bbox_transform=ax.transAxes)
+    ax.set_xlabel(x_name)
+    ax.set_ylabel(y1_name)
+    ax.set_ylabel(y2_name)
+    plt.savefig('%s/%s.png' % (fig_dir, fig_name))
+
+
+# 单x轴对应双y轴，两个y轴在不同图中
+def plot_xyy2(x_arr, x_name, y1_arr, y1_legend_arr, y1_name, y2_arr, y2_legend_arr, y2_name, fig_name, fig_dir):
+    fig = plt.figure()
+    ax1 = fig.add_subplot(211)
+    for i in range(len(y1_arr)):
+        ax1.plot(x_arr, y1_arr[i], label=y1_legend_arr[i])
+    ax1.set_xlabel(x_name)
+    ax1.set_ylabel(y1_name)
+    ax2 = fig.add_subplot(212)
+    for i in range(len(y2_arr)):
+        ax2.plot(x_arr, y2_arr[i], label=y2_legend_arr[i])
+    ax2.set_xlabel(x_name)
+    ax2.set_ylable(y2_name)
+    fig.legend(loc=1, bbox_to_anchor=(1, 1), bbox_transform=ax1.transAxes)
+    plt.savefig('%s/%s.png' % (fig_dir, fig_name))

@@ -1,0 +1,96 @@
+说明：
+实验为从21种色浆中随机选取3种色浆，并在0-1的均匀分布上随机生成浓度，采样sample_num数，并计算结果最好的配方的色差
+对每一sample_num数的实验重复10次，记录10次的最好色差、最坏色差、平均色差
+
+
+-------------------------------实际数据-------------------------------------------------
+sample_num: 256
+10_min_diff: 1.5972179899439605
+10_max_diff: 2.677165359213036
+10_average_diff: 2.011000825304334
+256  sample test finished!
+Time cost:  0.9324708700180053 seconds
+
+sample_num: 512
+10_min_diff: 1.193055965184332
+10_max_diff: 2.8173986303564473
+10_average_diff: 1.9459490251381641
+512  sample test finished!
+Time cost:  1.8796424627304078 seconds
+
+sample_num: 1024
+10_min_diff: 0.6016610132108585
+10_max_diff: 2.11667695327801
+10_average_diff: 1.489465835818426
+1024  sample test finished!
+Time cost:  3.77235803604126 seconds
+
+sample_num: 2048
+10_min_diff: 0.28408628452107076
+10_max_diff: 1.4574603497434038
+10_average_diff: 0.9146689508859964
+2048  sample test finished!
+Time cost:  7.571885180473328 seconds
+
+sample_num: 4096
+10_min_diff: 0.3236586436367785
+10_max_diff: 1.6413066961565002
+10_average_diff: 1.0324561892165687
+4096  sample test finished!
+Time cost:  15.121384191513062 seconds
+
+sample_num: 8192
+10_min_diff: 0.37930897922187906
+10_max_diff: 1.1692457456863095
+10_average_diff: 0.7693081464191134
+8192  sample test finished!
+Time cost:  30.2416130065918 seconds
+
+sample_num: 16384
+10_min_diff: 0.42177491611663326
+10_max_diff: 1.0869385510100589
+10_average_diff: 0.7372514602677178
+16384  sample test finished!
+Time cost:  60.544880223274234 seconds
+
+sample_num: 32768
+10_min_diff: 0.2920753802402666
+10_max_diff: 0.6546701960952571
+10_average_diff: 0.4971341703276497
+32768  sample test finished!
+Time cost:  120.9801108598709 seconds
+
+sample_num: 65536
+10_min_diff: 0.11382433864547213
+10_max_diff: 0.6226389451933944
+10_average_diff: 0.3415829265404632
+65536  sample test finished!
+Time cost:  241.9275298833847 seconds
+
+sample_num: 131072
+10_min_diff: 0.16784538766201113
+10_max_diff: 0.5609158670682963
+10_average_diff: 0.3593440549186871
+131072  sample test finished!
+Time cost:  484.0301739931107 seconds
+
+sample_num: 262144
+10_min_diff: 0.13669614423001
+10_max_diff: 0.3933396603881099
+10_average_diff: 0.252376013672461
+262144  sample test finished!
+Time cost:  967.9841010808944 seconds
+
+sample_num: 524288
+10_min_diff: 0.047966998979628916
+10_max_diff: 0.3420088611549283
+10_average_diff: 0.19127839268786556
+524288  sample test finished!
+Time cost:  1936.4017946004867 seconds
+
+sample_num: 1048576
+10_min_diff: 0.12553004924214878
+10_max_diff: 0.2720069255903611
+10_average_diff: 0.19335783409443713
+1048576  sample test finished!
+Time cost:  3871.721320652962 seconds

@@ -159,7 +159,7 @@ def plot():
     plt.savefig('fig2.png')
 
 
-# 生成测试样本
+# 生成测试样本：对配方和分光反射率数据做补充
 def generate_test_sample(test_ref, N_sample, y_noise_scale, dim_x, dim_y, dim_z, dim_total):
     test_samp = np.tile(np.array(test_ref), N_sample).reshape(N_sample, reflectance_dim)
     test_samp = torch.tensor(test_samp, dtype=torch.float)
