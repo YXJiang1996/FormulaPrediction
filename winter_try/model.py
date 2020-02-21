@@ -1,6 +1,7 @@
 import torch
 import torch.utils.data
 import numpy as np
+np.set_printoptions(threshold=2**20)
 import winter_try.info as info
 
 from torch import nn

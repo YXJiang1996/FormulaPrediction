@@ -78,6 +78,8 @@ def conc2ref_km(concentrations, background=info.white_solvent_reflectance,
 
 # -----------------------------------------------网络模型--------------------------------------------------
 def MMD_multiscale(x, y):
+    print('MMD_multiscale_x:',x)
+    print('MMD_multiscale_y:',y)
     xx, yy, zz = torch.mm(x, x.t()), torch.mm(y, y.t()), torch.mm(x, y.t())
 
     rx = (xx.diag().unsqueeze(0).expand_as(xx))
@@ -100,6 +102,8 @@ def MMD_multiscale(x, y):
 
 
 def fit(input, target):
+    print('fit_input:',input)
+    print('fit_target:',target)
     return torch.mean((input - target) ** 2)
 
 
@@ -114,14 +118,15 @@ def plot_losses(losses, name):
     losses = np.array(losses)
     # 正向传播损失
     ax1 = fig.add_subplot(211)
-    ax1.plot(losses[0], 'f')
+    ax1.plot(losses[0],'g')
     ax1.set_xlabel('epoch')
-    ax1.set_ylabel('loss')
+    ax1.set_ylabel('forward_loss')
     # 反向传播损失
     ax2 = fig.add_subplot(212)
-    ax2.plot(losses[1], 'b')
+    ax2.plot(losses[1], 'r')
     ax2.set_xlabel('epoch')
-    ax2.set_ylable('loss')
+    ax2.set_ylabel('backward_loss')
+    fig.legend(loc=1, bbox_to_anchor=(1, 1), bbox_transform=ax1.transAxes)
     # 保存图片
     plt.savefig('loss_dir/%s.png' % name)
     plt.close()

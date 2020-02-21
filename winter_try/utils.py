@@ -1,11 +1,14 @@
 import torch
 import numpy as np
-np.set_printoptions(threshold=np.nan)
+
+np.set_printoptions(threshold=2 ** 20)
 import winter_try.info as info
 import matplotlib
+import xlsxwriter
 
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from winter_try.info import base_color_num,base_color_names
 from colormath.color_objects import SpectralColor, LabColor
 from colormath.color_conversions import convert_color
 from colormath.color_diff import delta_e_cie1976, delta_e_cie2000
@@ -56,7 +59,7 @@ def ciede2000_color_diff(reflectance1, reflectance2):
 
 
 # 使用km模型计算配方的分光反射率
-# 注意：这里的concentrations使用的是 color_num*sample_num 的二维数组
+# 注意：这里的concentrations使用的是 color_num*sample_num 的二维np.array
 def conc2ref_km(concentrations, background=info.white_solvent_reflectance,
                 base_conc=info.base_concentration,
                 base_color_num=info.base_color_num, base_ref=info.base_reflectance,
@@ -75,6 +78,23 @@ def conc2ref_km(concentrations, background=info.white_solvent_reflectance,
     reflectance = fss - ((fss + 1) ** 2 - 1) ** 0.5 + 1
     reflectance = reflectance.transpose()
     return reflectance
+
+
+def main():
+    conc_target = np.array([[0.0000, 0.0000, 0.0000, 0.0000, 0.1688, 0.1876,
+                             0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000,
+                             0.0000, 0.0000, 0.2798, 0.0000, 0.0000, 0.0000,
+                             0.0000, 0.0000, 0.000]])
+    conc_1 = np.array([[0.0000, 0.0000, 0.0000, 0.0000, 0.1688, 0.1876, 0.0000, 0.0000, 0.0000,
+                        0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.2798, 0.0000, 0.0000, 0.0000,
+                        0.0000, 0.0000, 0.0000]])
+    ref_target = conc2ref_km(conc_target)
+    ref_1 = conc2ref_km(conc_1)
+    diff = ciede2000_color_diff(ref_target[0], ref_1[0])
+    print(diff)
+
+
+# main()
 
 
 # -----------------------------------------------网络模型--------------------------------------------------
@@ -97,16 +117,18 @@ def MMD_multiscale(x, y):
         YY += a ** 2 * (a ** 2 + dyy) ** -1
         XY += a ** 2 * (a ** 2 + dxy) ** -1
 
-    mmd_txt = open('mmd.txt', 'w+')
-    print('mmd_x:',x,'mmd_y:',y,file=mmd_txt)
-    mmd_txt.close()
+    # mmd_txt = open('mmd.txt', 'w+')
+    # print('mmd_x:', x, 'mmd_y:', y, file=mmd_txt)
+    # mmd_txt.close()
+    print('mmd_x:', x, 'mmd_y:', y)
     return torch.mean(XX + YY - 2. * XY)
 
 
 def fit(input, target):
-    fit_txt = open('fit.txt', 'w+')
-    print('fit_input:', input, 'fit_target:', target, file=fit_txt)
-    fit_txt.close()
+    # fit_txt = open('fit.txt', 'w+')
+    # print('fit_input:', input, 'fit_target:', target, file=fit_txt)
+    # fit_txt.close()
+    print('fit_input:', input, 'fit_target:', target)
     return torch.mean((input - target) ** 2)
 
 
@@ -121,7 +143,7 @@ def plot_losses(losses, name):
     losses = np.array(losses)
     # 正向传播损失
     ax1 = fig.add_subplot(211)
-    ax1.plot(losses[0],'g')
+    ax1.plot(losses[0], 'g')
     ax1.set_xlabel('epoch')
     ax1.set_ylabel('forward_loss')
     # 反向传播损失
@@ -179,3 +201,15 @@ def plot_xyy2(x_arr, x_name, y1_arr, y1_legend_arr, y1_name, y2_arr, y2_legend_a
     ax2.set_ylable(y2_name)
     fig.legend(loc=1, bbox_to_anchor=(1, 1), bbox_transform=ax1.transAxes)
     plt.savefig('%s/%s.png' % (fig_dir, fig_name))
+
+
+# --------------------------------------------输出到Excel--------------------------------------------------
+# 将配方统计结果输出到excel
+def save2excel(book_name, sheet_name, formula_list):
+    workbook = xlsxwriter.Workbook("excel_dir/%s" % book_name)
+    worksheet = workbook.add_worksheet('%s' % sheet_name)
+    # 填写配方编号
+    for n in range(base_color_num):
+        worksheet.write(0, n, base_color_names[n])
+    # 填写配方种数
+    workbook.close()
