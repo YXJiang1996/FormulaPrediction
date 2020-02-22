@@ -164,8 +164,8 @@ def main():
     n_its_per_epoch = 12  # 每次训练12批数据
     batch_size = 1600  # 每批训练1600个样本
     # 用于维度补齐的值
-    y_noise_scale = 3e-2
-    zeros_noise_scale = 3e-2
+    y_noise_scale = 1e-4
+    zeros_noise_scale = 1e-4
     # 损失的权重
     lambd_predict = 300.  # forward pass
     lambd_latent = 300.  # latent space
@@ -178,7 +178,7 @@ def main():
                                                                             lr=lr, l2_reg=l2_reg, meta_epoch=meta_epoch,
                                                                             gamma=gamma)
     # 读取数据集
-    data = np.load('dataset/data_01.npz')
+    data = np.load('data_dir/data_01.npz')
     concentrations = torch.from_numpy(data['concentrations']).float()
     reflectance = torch.from_numpy(data['reflectance']).float()
     # 加载数据
@@ -213,12 +213,12 @@ def main():
             loss_for_list.append(loss_for.item())
             loss_rev_list.append(loss_rev.item())
         # 保存模型
-        torch.save(inn, 'model_dir/model_01')
+        torch.save(inn, 'model_dir/model_02')
         # 损失函数画图
         losses=[loss_for_list,loss_rev_list]
-        plot_losses(losses,'loss_01')
+        plot_losses(losses,'loss_02')
         # 保存损失函数到文件
-        loss_txt = open('loss_01.txt', 'w+')
+        loss_txt = open('loss_02.txt', 'w+')
         for i in range(n_epochs):
             # 打印损失
             print('epoch:', i, ' loss_for:', loss_for_list[i], ' loss_rev:', loss_rev_list[i],

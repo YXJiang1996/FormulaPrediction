@@ -78,8 +78,8 @@ def conc2ref_km(concentrations, background=info.white_solvent_reflectance,
 
 # -----------------------------------------------网络模型--------------------------------------------------
 def MMD_multiscale(x, y):
-    print('MMD_multiscale_x:',x)
-    print('MMD_multiscale_y:',y)
+    # print('MMD_multiscale_x:',x)
+    # print('MMD_multiscale_y:',y)
     xx, yy, zz = torch.mm(x, x.t()), torch.mm(y, y.t()), torch.mm(x, y.t())
 
     rx = (xx.diag().unsqueeze(0).expand_as(xx))
@@ -102,8 +102,8 @@ def MMD_multiscale(x, y):
 
 
 def fit(input, target):
-    print('fit_input:',input)
-    print('fit_target:',target)
+    # print('fit_input:',input)
+    # print('fit_target:',target)
     return torch.mean((input - target) ** 2)
 
 
